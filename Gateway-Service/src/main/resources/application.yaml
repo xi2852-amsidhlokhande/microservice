@@ -1,0 +1,55 @@
+server:
+  port: 8777
+
+eureka:
+  client:
+    service-url:
+      - defaultZone: http://localhost:8761/eureka/
+
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: user-service-gateway-route
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: user-service
+                fallbackuri: forward:/fallback/user-service
+
+        - id: address-service-gateway-route
+          uri: lb://address-service
+          predicates:
+            - Path=/address/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: address-service
+                fallbackuri: forward:/fallback/address-service
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillieseconds: 5000
+management:
+  endpoint:
+    hystrix:
+      stream:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+
+

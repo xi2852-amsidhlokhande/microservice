@@ -1,0 +1,8 @@
+User-Service Details:
+         port no- 8081
+		 
+Address-Service Details:
+         port no - 8082
+Eureka Server- 8761
+
+Hystrix Dashboard  port no 9555		 
